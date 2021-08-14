@@ -6,7 +6,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import HelloWorld from '@/components/ListForm.vue'; // @ is an alias to /src
+import HelloWorld from '@/components/Forms/LoginForm.vue'; // @ is an alias to /src
 
 export default defineComponent({
   name: 'Home',

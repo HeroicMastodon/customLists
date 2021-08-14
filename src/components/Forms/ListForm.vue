@@ -12,7 +12,7 @@
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
 import TextInput from '@/components/inputs/TextInput.vue';
-import SelectInput from './inputs/SelectInput.vue';
+import SelectInput from '../inputs/SelectInput.vue';
 import { FieldTypeOptions } from '@/models/list';
 
 export default defineComponent({
