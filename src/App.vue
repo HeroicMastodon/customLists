@@ -1,8 +1,4 @@
 <template>
-  <div id="nav">
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link>
-  </div>
   <router-view/>
 </template>
 
@@ -16,6 +12,7 @@ body {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: $text-light;
+  height: 100%;
 }
 
 #nav {

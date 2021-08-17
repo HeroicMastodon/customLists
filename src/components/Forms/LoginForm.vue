@@ -1,32 +1,64 @@
 <template>
 	<div class="container">
 		<h2>Login</h2>
-		<div class="inputs">
-			<TextInput v-model:value.lazy="username" label="Username" />
+		<div class="inputs" >
 			<TextInput
-				v-model:value="password"
+				v-model:value.lazy="usernameActual"
+				label="Username"
+				:maxLength="16"
+				v-model:hasError="errors[0]"
+			/>
+			<TextInput
+				v-model:value="passwordActual"
 				label="Password"
 				:obscureText="true"
 				:validators="passwordValidators"
+				:minLength="8"
+				:maxLength="32"
+				v-model:hasError="errors[1]"
 			/>
 		</div>
 		<div class="buttons">
-			<TextButton text="Login" />
-			<TextButton text="Register" :outline="true" />
+			<TextButton
+				text="Login"
+				@click="handleLogin"
+				:disabled="disabled"
+			/>
+			<TextButton
+				text="Register"
+				:outline="true"
+				@click="handleRegister"
+				:disabled="disabled"
+			/>
 		</div>
 	</div>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from "vue";
+import { computed, defineComponent, ref, watchEffect, reactive } from "vue";
 import TextButton from "../inputs/TextButton.vue";
 import TextInput from "../inputs/TextInput.vue";
 
 export default defineComponent({
 	components: { TextInput, TextButton },
-	setup() {
-		const username = ref("");
-		const password = ref("");
+	props: {
+		username: String,
+		password: String,
+	},
+	emits: ["update:username", "update:password", "login", "register"],
+	setup(props, { emit }) {
+		const usernameActual = ref(props.username);
+		const passwordActual = ref(props.password);
+
+		const errors = reactive([false, false]);
+
+		const disabled = computed(() => {
+			const emptyField = !usernameActual.value || !passwordActual.value;
+
+			return errors.reduce((prev, curr) => {
+				return prev || curr;
+			}, false) || emptyField;
+		});
 
 		const passwordValidators = [
 			(value?: string) => {
@@ -36,14 +68,34 @@ export default defineComponent({
 					/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$ %^&*-])/
 				);
 				if (!match)
-					return "Must include one lowercase, one uppercase, one number, and one special";
+					return "Use one lowercase, one uppercase, one number, and one special";
 			},
 		];
 
+		watchEffect(() => {
+			emit("update:username", usernameActual.value);
+		});
+
+		watchEffect(() => {
+			emit("update:password", passwordActual.value);
+		});
+
+		function handleLogin() {
+			emit("login");
+		}
+
+		function handleRegister() {
+			emit("register");
+		}
+
 		return {
-			username,
-			password,
+			usernameActual,
+			passwordActual,
 			passwordValidators,
+			handleLogin,
+			handleRegister,
+			errors,
+			disabled,
 		};
 	},
 });

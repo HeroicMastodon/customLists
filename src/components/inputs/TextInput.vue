@@ -1,10 +1,10 @@
 <template>
 	<div :class="`group ${hasContentClass}`">
 		<label>{{ label || "Label" }}</label>
-		<input v-if="isLazy" v-model.lazy="actual" type="text" />
+		<input v-if="isLazy" v-model.lazy="actual" type="text" :maxlength="maxLength" :minlength="minLength"/>
 		<input v-else v-model="actual" :type="type" />
 		<div class="btm"></div>
-		<div class="error">{{error || ''}}</div>
+		<div :data-hover="error || ''" :class="`error ${error ? '' : 'no-hover'}`">{{error || ''}}</div>
 	</div>
 </template>
 
@@ -47,6 +47,14 @@ export default defineComponent({
 			required: false,
 			default: () => [],
 		},
+		maxLength: {
+			type: Number,
+			required: false
+		},
+		minLength: {
+			type: Number,
+			required: false
+		}
 	},
 	emits: [
 		"update:value",
@@ -73,11 +81,13 @@ export default defineComponent({
 
 				if (error) break;
 			}
+
 			return error;
 		};
 
 		watch(actual, () => {
 			error.value = validate() ?? '';
+			emit('update:hasError', !!error.value);
 		});
 
 		// error.value = validate() ?? '';
@@ -115,15 +125,17 @@ export default defineComponent({
 		transition: all ease $transition-length;
 	}
 
-	&:focus-within,
-	&.has-content {
+	&.has-content,
+	&:focus-within {
 		label {
 			$offset: 0.75rem;
 			$label-padding: -$offset - $v-padding;
 			top: $label-padding;
 			font-size: 0.75em;
 		}
+	}
 
+	&:focus-within {
 		.btm {
 			width: 100%;
 			left: 0;
@@ -160,6 +172,43 @@ export default defineComponent({
 		height: 1rem;
 		color: $error;
 		text-align: left;
+		font-size: .75rem;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+
+		&::before {
+			content: attr(data-hover);
+			color: $error;
+			width: fit-content;
+			height: fit-content;
+			visibility: hidden;
+			opacity: 0;
+			position: absolute;
+			left: 0;
+			background: $dark;
+			border: solid $error 2px;
+			padding: .25rem 1rem;
+			border-radius: 3px;
+
+			transition: all ease .5s;
+
+			transition-delay: .5s;
+		}
+
+		&:hover {
+			&::before {
+				visibility: visible;
+				opacity: 100;
+				transition-delay: 0;
+			}
+		}
+
+		&.no-hover {
+			&::before {
+				visibility: hidden;
+			}
+		}
 	}
 }
 </style>
