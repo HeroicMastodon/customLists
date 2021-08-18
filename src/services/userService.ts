@@ -1,4 +1,5 @@
-import { reactive, readonly } from "vue";
+import { api } from '@/server/api';
+import { reactive, readonly } from 'vue';
 
 export interface User {
 	username: string;
@@ -15,23 +16,34 @@ export interface LoginResponse {
 }
 
 const user = reactive<User>({
-	username: ""
+	username: '',
 });
-
 
 export const useUsers = (): User => readonly(user);
 
 export const userService = {
-	login: async (username: string, password: string): Promise<LoginResponse> => {
-		user.username = username;
-		return {
-			success: true
-		}
+	login: async (
+		username: string,
+		password: string
+	): Promise<LoginResponse> => {
+		const response = (
+			await api.patch<LoginResponse>('/user', { username, password })
+		).data;
+
+		if (response && response.success) user.username = username;
+
+		return response;
 	},
-	register: async (username: string, password: string): Promise<LoginResponse> => {
-		return {
-			success: false,
-			error: "User already exists"
-		}
-	}
+	register: async (
+		username: string,
+		password: string
+	): Promise<LoginResponse> => {
+		const response = (
+			await api.post<LoginResponse>('/user', { username, password })
+		).data;
+
+		if (response && response.success) user.username = username;
+
+		return response;
+	},
 };
