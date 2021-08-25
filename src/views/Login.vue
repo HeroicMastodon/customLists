@@ -41,8 +41,7 @@ export default defineComponent({
 
 		function handleLoginResponse(result: LoginResponse) {
 			if (result.success) {
-				router.push('/lists')
-				return;
+				router.push({path: '/lists'})
 			}
 
 			error.value = result.error ?? "";

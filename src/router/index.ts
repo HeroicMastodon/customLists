@@ -25,6 +25,7 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
+	console.log(user);
 	if (to.path !== '/' && isNullOrWhitespace(user.username)) {
     next('/');
     return;

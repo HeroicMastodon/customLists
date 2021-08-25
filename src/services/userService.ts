@@ -1,4 +1,5 @@
-import { api } from '@/server/api';
+import { api, ApiResponse, handleException } from '@/server/api';
+import { AxiosError } from 'axios';
 import { reactive, readonly } from 'vue';
 
 export interface User {
@@ -10,40 +11,55 @@ export interface LoginRequest {
 	password: string;
 }
 
-export interface LoginResponse {
-	success: boolean;
-	error?: string;
+export interface LoginResponse extends ApiResponse {
+	user?: User;
+	token?: string;
 }
 
-const user = reactive<User>({
-	username: '',
+export interface UserStore {
+	user: User;
+	token?: string;
+}
+
+
+const store = reactive<UserStore>({
+	user: {
+		username: ""
+	}
 });
 
-export const useUsers = (): User => readonly(user);
-
+export const useUsers = (): User => readonly(store.user);
 export const userService = {
 	login: async (
 		username: string,
 		password: string
 	): Promise<LoginResponse> => {
-		const response = (
-			await api.patch<LoginResponse>('/user', { username, password })
-		).data;
+		try {
+			const response = (
+				await api.patch<LoginResponse>('/user', { username, password })
+			).data;
 
-		if (response && response.success) user.username = username;
+			if (response && response.success && response.user) store.user.username = response.user.username;
 
-		return response;
+			return response;
+		} catch (e) {
+			return handleException(e);
+		}
 	},
 	register: async (
 		username: string,
 		password: string
 	): Promise<LoginResponse> => {
-		const response = (
-			await api.post<LoginResponse>('/user', { username, password })
-		).data;
+		try {
+			const response = (
+				await api.post<LoginResponse>('/user', { username, password })
+			).data;
 
-		if (response && response.success) user.username = username;
+			if (response && response.success && response.user) store.user = response.user;
 
-		return response;
+			return response;
+		} catch (e) {
+			return handleException(e);
+		}
 	},
 };
