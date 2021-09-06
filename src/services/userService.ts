@@ -13,21 +13,25 @@ export interface LoginRequest {
 
 export interface LoginResponse extends ApiResponse {
 	user?: User;
-	token?: string;
+	authToken?: string;
 }
 
 export interface UserStore {
 	user: User;
-	token?: string;
+	authToken?: string;
 }
-
 
 const store = reactive<UserStore>({
 	user: {
-		username: ""
-	}
+		username: '',
+	},
 });
 
+function handleValidResponse(data: LoginResponse) {
+	store.user.username = data.user?.username ?? '';
+	store.authToken = data.authToken;
+	api.updateApiHeaders(store.authToken ?? '');
+}
 export const useUsers = (): User => readonly(store.user);
 export const userService = {
 	login: async (
@@ -39,7 +43,9 @@ export const userService = {
 				await api.patch<LoginResponse>('/user', { username, password })
 			).data;
 
-			if (response && response.success && response.user) store.user.username = response.user.username;
+			if (response && response.success && response.user) {
+				handleValidResponse(response);
+			}
 
 			return response;
 		} catch (e) {
@@ -55,11 +61,29 @@ export const userService = {
 				await api.post<LoginResponse>('/user', { username, password })
 			).data;
 
-			if (response && response.success && response.user) store.user = response.user;
+			if (response && response.success && response.user) {
+				handleValidResponse(response);
+			}
 
 			return response;
 		} catch (e) {
 			return handleException(e);
+		}
+	},
+	authenticate: async () => {
+		try {
+			const response = await api.get<LoginResponse>('/user');
+
+			const isSuccess = response.status == 200;
+
+			if (isSuccess) {
+				const data = response.data;
+				handleValidResponse(data);
+			}
+
+			return isSuccess;
+		} catch (error) {
+			handleException(error);
 		}
 	},
 };

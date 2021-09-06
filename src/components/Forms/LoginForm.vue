@@ -1,7 +1,7 @@
 <template>
 	<div class="container">
 		<h2>Login</h2>
-		<div class="inputs" >
+		<div class="inputs">
 			<TextInput
 				v-model:value.lazy="usernameActual"
 				label="Username"
@@ -19,28 +19,20 @@
 			/>
 		</div>
 		<div class="buttons">
-			<TextButton
-				text="Login"
-				@click="handleLogin"
-				:disabled="disabled"
-			/>
-			<TextButton
-				text="Register"
-				:outline="true"
-				@click="handleRegister"
-				:disabled="disabled"
-			/>
+			<button @click="handleLogin" :disabled="disabled">Login</button>
+			<button @click="handleLogin" :disabled="disabled" class="outline">
+				Register
+			</button>
 		</div>
 	</div>
 </template>
 
 <script lang="ts">
 import { computed, defineComponent, ref, watchEffect, reactive } from "vue";
-import TextButton from "../inputs/TextButton.vue";
 import TextInput from "../inputs/TextInput.vue";
 
 export default defineComponent({
-	components: { TextInput, TextButton },
+	components: { TextInput },
 	props: {
 		username: String,
 		password: String,
@@ -55,9 +47,11 @@ export default defineComponent({
 		const disabled = computed(() => {
 			const emptyField = !usernameActual.value || !passwordActual.value;
 
-			return errors.reduce((prev, curr) => {
-				return prev || curr;
-			}, false) || emptyField;
+			return (
+				errors.reduce((prev, curr) => {
+					return prev || curr;
+				}, false) || emptyField
+			);
 		});
 
 		const passwordValidators = [

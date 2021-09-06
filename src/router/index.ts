@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router';
 import Login from '../views/Login.vue';
 import Lists from '../views/Lists.vue';
-import { useUsers } from '@/services/userService';
+import { useUsers, userService } from '@/services/userService';
 import { isNullOrWhitespace } from '@/util/stringUtils';
 
 const user = useUsers();
@@ -24,13 +24,15 @@ const router = createRouter({
 	routes,
 });
 
-router.beforeEach((to, from, next) => {
-	console.log(user);
-	if (to.path !== '/' && isNullOrWhitespace(user.username)) {
-    next('/');
-    return;
+router.beforeEach(async (to, from, next) => {
+	const isAuthenticated = ( await userService.authenticate() );	
+	console.log(isAuthenticated)
+	if (to.path !== '/' && ! isAuthenticated) {
+		next('/');
+		return;
 	}
-  
+
+
 	next();
 });
 

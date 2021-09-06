@@ -1,6 +1,12 @@
 <template>
+  <Navigation/>
   <router-view/>
 </template>
+
+<script lang="ts" setup>
+import Navigation from '@/components/nav/Navigation.vue'
+
+</script>
 
 <style lang="scss">
 body {
