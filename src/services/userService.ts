@@ -14,6 +14,7 @@ export interface LoginRequest {
 export interface LoginResponse extends ApiResponse {
 	user?: User;
 	authToken?: string;
+	expiration?: string;
 }
 
 export interface UserStore {
@@ -27,10 +28,13 @@ const store = reactive<UserStore>({
 	},
 });
 
-function handleValidResponse(data: LoginResponse) {
+function handleValidResponse(data: LoginResponse, updateToken: boolean) {
 	store.user.username = data.user?.username ?? '';
-	store.authToken = data.authToken;
-	api.updateApiHeaders(store.authToken ?? '');
+
+	if (updateToken) {
+		store.authToken = data.authToken;
+		api.updateApiHeaders(store.authToken ?? '', data.expiration ?? '');
+	}
 }
 export const useUsers = (): User => readonly(store.user);
 export const userService = {
@@ -44,7 +48,7 @@ export const userService = {
 			).data;
 
 			if (response && response.success && response.user) {
-				handleValidResponse(response);
+				handleValidResponse(response, true);
 			}
 
 			return response;
@@ -62,7 +66,7 @@ export const userService = {
 			).data;
 
 			if (response && response.success && response.user) {
-				handleValidResponse(response);
+				handleValidResponse(response, true);
 			}
 
 			return response;
@@ -78,7 +82,7 @@ export const userService = {
 
 			if (isSuccess) {
 				const data = response.data;
-				handleValidResponse(data);
+				handleValidResponse(data, false);
 			}
 
 			return isSuccess;
@@ -86,4 +90,38 @@ export const userService = {
 			handleException(error);
 		}
 	},
+	logout: async () => {
+		try {
+			const response = await api.delete('/user');
+
+			const isSuccess = response.status == 200;
+
+			if (isSuccess) {
+				api.updateApiHeaders("", "");
+				store.user.username = "";
+				store.authToken = "";
+			}
+
+			return isSuccess;
+		} catch (error) {
+			handleException(error);
+		}
+	},
+	hardLogout: async () => {
+		try {
+			const response = await api.delete('/user/hard');
+
+			const isSuccess = response.status == 200;
+
+			if (isSuccess) {
+				api.updateApiHeaders("", "");
+				store.user.username = "";
+				store.authToken = "";
+			}
+
+			return isSuccess;
+		} catch (error) {
+			handleException(error);
+		}
+	}
 };

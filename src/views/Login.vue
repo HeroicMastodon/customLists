@@ -23,6 +23,13 @@ import { LoginResponse, userService } from "@/services/userService";
 
 export default defineComponent({
 	components: { LoginForm },
+	props: {
+		directTo: {
+			type: String,
+			required: false,
+			default: '/lists'
+		}
+	},
 	setup(props) {
 		const router = useRouter();
 		const username = ref("");
@@ -41,7 +48,7 @@ export default defineComponent({
 
 		function handleLoginResponse(result: LoginResponse) {
 			if (result.success) {
-				router.push({path: '/lists'})
+				router.push({path: props.directTo})
 			}
 
 			error.value = result.error ?? "";

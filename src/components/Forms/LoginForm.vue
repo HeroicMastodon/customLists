@@ -20,7 +20,7 @@
 		</div>
 		<div class="buttons">
 			<button @click="handleLogin" :disabled="disabled">Login</button>
-			<button @click="handleLogin" :disabled="disabled" class="outline">
+			<button @click="handleRegister" :disabled="disabled" class="outline">
 				Register
 			</button>
 		</div>

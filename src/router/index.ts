@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router';
+import { createRouter, createWebHistory, LocationAsPath, LocationQueryRaw, RouteLocationRaw, RouteRecordRaw } from 'vue-router';
 import Login from '../views/Login.vue';
 import Lists from '../views/Lists.vue';
 import { useUsers, userService } from '@/services/userService';
@@ -11,6 +11,7 @@ const routes: Array<RouteRecordRaw> = [
 		path: '/',
 		name: 'Home',
 		component: Login,
+		props: route => ({ directTo: route.query.previous  })
 	},
 	{
 		path: '/lists',
@@ -26,9 +27,16 @@ const router = createRouter({
 
 router.beforeEach(async (to, from, next) => {
 	const isAuthenticated = ( await userService.authenticate() );	
-	console.log(isAuthenticated)
+
 	if (to.path !== '/' && ! isAuthenticated) {
-		next('/');
+		const redirect: RouteLocationRaw = {
+			path: '/',
+			query: {
+				previous: to.path
+			}
+		};
+
+		next(redirect);
 		return;
 	}
 
