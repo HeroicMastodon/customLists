@@ -15,12 +15,15 @@ export type ItemDefinition = FieldDefinition[];
 export interface Field {
 	itemType: FieldType;
 	itemValue: FieldValue;
+	position: number;
 }
 
 export interface FieldDefinition<T = any> {
+	name: string;
 	itemType: FieldType;
 	defaultValue?: FieldValue | DefaultValueFactory<T>;
 	required: boolean;
+	position: number;
 }
 
 export type FieldType = 'select' | 'text' | 'text area' | 'radio' | 'number' | 'date' | 'time';

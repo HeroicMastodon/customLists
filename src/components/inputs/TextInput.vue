@@ -73,6 +73,10 @@ export default defineComponent({
 		watchEffect(() => {
 			emit("update:value", actual.value);
 		});
+		
+		watchEffect(() => {
+			actual.value = props.value;
+		})
 
 		const validate = () => {
 			let error: Error = null;

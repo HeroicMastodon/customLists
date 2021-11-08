@@ -10,8 +10,8 @@ const routes: Array<RouteRecordRaw> = [
 	{
 		path: '/',
 		name: 'Home',
-		component: Login,
-		props: route => ({ directTo: route.query.previous  })
+		component: Lists,
+		// props: route => ({ directTo: route.query.previous  })
 	},
 	{
 		path: '/lists',

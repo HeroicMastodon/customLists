@@ -1,20 +1,21 @@
 <template>
 	<div class="list">Logged in as {{ user.username }}!</div>
+	<ListForm :value="list" />
 </template>
 
-<script lang="ts">
+<script lang="ts" setup>
 import { defineComponent } from "vue";
 import { userService, useUsers } from "@/services/userService";
+import ListForm from "@/components/Forms/ListForm.vue";
+import { List } from "@/models/list";
 
-export default defineComponent({
-	setup() {
-		const user = useUsers();
+	const user = useUsers();
 
-		return {
-			user,
-		};
-	},
-});
+	const list: List = {
+		name: '',
+		itemDefinition: []
+	}
+
 </script>
 
 <style lang="scss" scoped>
