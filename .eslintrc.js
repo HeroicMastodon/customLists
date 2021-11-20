@@ -6,6 +6,6 @@ module.exports = {
     '@vue/typescript/recommended',
  ],
  'rules': {
-
+    
  }
 }

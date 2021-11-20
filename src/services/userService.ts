@@ -1,127 +1,137 @@
 import { api, ApiResponse, handleException } from '@/server/api';
 import { AxiosError } from 'axios';
-import { reactive, readonly } from 'vue';
+import { computed, reactive, readonly } from 'vue';
 
 export interface User {
-	username: string;
+    username: string;
 }
 
 export interface LoginRequest {
-	username: string;
-	password: string;
+    username: string;
+    password: string;
 }
 
 export interface LoginResponse extends ApiResponse {
-	user?: User;
-	authToken?: string;
-	expiration?: string;
+    user?: User;
+    authToken?: string;
+    expiration?: string;
 }
 
 export interface UserStore {
-	user: User;
-	authToken?: string;
+    user: User;
+    authToken?: string;
 }
 
 const store = reactive<UserStore>({
-	user: {
-		username: '',
-	},
+    user: {
+        username: '',
+    },
 });
 
 function handleValidResponse(data: LoginResponse, updateToken: boolean) {
-	store.user.username = data.user?.username ?? '';
+    store.user.username = data.user?.username ?? '';
 
-	if (updateToken) {
-		store.authToken = data.authToken;
-		api.updateApiHeaders(store.authToken ?? '', data.expiration ?? '');
-	}
+    if (updateToken) {
+        store.authToken = data.authToken;
+        api.updateApiHeaders(store.authToken ?? '', data.expiration ?? '');
+    }
 }
+
 export const useUsers = (): User => readonly(store.user);
 export const userService = {
-	login: async (
-		username: string,
-		password: string
-	): Promise<LoginResponse> => {
-		try {
-			const response = (
-				await api.patch<LoginResponse>('/user', { username, password })
-			).data;
+    login: async (
+        username: string,
+        password: string
+    ): Promise<LoginResponse> => {
+        try {
+            const response = (
+                await api.patch<LoginResponse>('/user', { username, password })
+            ).data;
 
-			if (response && response.success && response.user) {
-				handleValidResponse(response, true);
-			}
+            if (response && response.success && response.user) {
+                handleValidResponse(response, true);
+            }
 
-			return response;
-		} catch (e) {
-			return handleException(e);
-		}
-	},
-	register: async (
-		username: string,
-		password: string
-	): Promise<LoginResponse> => {
-		try {
-			const response = (
-				await api.post<LoginResponse>('/user', { username, password })
-			).data;
+            return response;
+        } catch (e) {
+            return handleException(e);
+        }
+    },
+    register: async (
+        username: string,
+        password: string
+    ): Promise<LoginResponse> => {
+        try {
+            const response = (
+                await api.post<LoginResponse>('/user', { username, password })
+            ).data;
 
-			if (response && response.success && response.user) {
-				handleValidResponse(response, true);
-			}
+            if (response && response.success && response.user) {
+                handleValidResponse(response, true);
+            }
 
-			return response;
-		} catch (e) {
-			return handleException(e);
-		}
-	},
-	authenticate: async () => {
-		try {
-			const response = await api.get<LoginResponse>('/user');
+            return response;
+        } catch (e) {
+            return handleException(e);
+        }
+    },
+    authenticate: async () => {
+        try {
+            const response = await api.get<LoginResponse>('/user');
 
-			const isSuccess = response.status == 200;
+            const isSuccess = response.status == 200;
 
-			if (isSuccess) {
-				const data = response.data;
-				handleValidResponse(data, false);
-			}
+            if (isSuccess) {
+                const data = response.data;
+                handleValidResponse(data, false);
+            }
 
-			return isSuccess;
-		} catch (error) {
-			handleException(error);
-		}
-	},
-	logout: async () => {
-		try {
-			const response = await api.delete('/user');
+            const token = api.getAuthToken();
+            if (token) store.authToken = token;
 
-			const isSuccess = response.status == 200;
+            return isSuccess;
+        } catch (error) {
+            handleException(error);
+        }
+    },
+    logout: async () => {
+        try {
+            const response = await api.delete('/user');
 
-			if (isSuccess) {
-				api.updateApiHeaders("", "");
-				store.user.username = "";
-				store.authToken = "";
-			}
+            const isSuccess = response.status == 200;
 
-			return isSuccess;
-		} catch (error) {
-			handleException(error);
-		}
-	},
-	hardLogout: async () => {
-		try {
-			const response = await api.delete('/user/hard');
+            if (isSuccess) {
+                api.updateApiHeaders("", "");
+                store.user.username = "";
+                store.authToken = "";
+            }
 
-			const isSuccess = response.status == 200;
+            return isSuccess;
+        } catch (error) {
+            handleException(error);
+        }
+    },
+    hardLogout: async () => {
+        try {
+            const response = await api.delete('/user/hard');
 
-			if (isSuccess) {
-				api.updateApiHeaders("", "");
-				store.user.username = "";
-				store.authToken = "";
-			}
+            const isSuccess = response.status == 200;
 
-			return isSuccess;
-		} catch (error) {
-			handleException(error);
-		}
-	}
+            if (isSuccess) {
+                api.updateApiHeaders("", "");
+                store.user.username = "";
+                store.authToken = "";
+            }
+
+            return isSuccess;
+        } catch (error) {
+            handleException(error);
+        }
+    },
+    isLoggedIn: computed(() => store.authToken !=
+        null && store.user !=
+        null && store.user.username !=
+        null &&
+        store.user.username !=
+        "")
 };

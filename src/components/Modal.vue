@@ -60,7 +60,7 @@ export default defineComponent({
 	max-width: 90vw;
 	margin: 0px auto;
 	padding: 1em;
-	background-color: $black;
+	background-color: $dark;
 	border-radius: 8px;
 	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33);
 	font-family: Helvetica, Arial, sans-serif;

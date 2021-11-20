@@ -11,20 +11,25 @@ const emit = defineEmits<{
 }>();
 
 function handleCheck(e: any) {
+  console.log(props.value)
 	emit('update:value', !props.value);
 }
 
 </script>
 
 <template>
-	<label class="container">
-		{{props.label}}:
-		<input type="checkbox" class="checkbox" :checked="props.value" :value="props.value" @change="handleCheck">
-		<span class="checkmark"></span>
-	</label>
+  <div class="container">
+    <label >
+      {{props.label}}:
+    </label>
+    <input type="checkbox" class="checkbox" :checked="props.value" :value="props.value" @change="handleCheck">
+  </div>
 </template>
 
 // <style lang="scss" scoped>
+.container.container {
+  display: inline-block;
+}
 // $checkboxLength: 1rem;
 // .container {
 //   display: block;

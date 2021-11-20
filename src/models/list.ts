@@ -24,10 +24,11 @@ export interface FieldDefinition<T = any> {
 	defaultValue?: FieldValue | DefaultValueFactory<T>;
 	required: boolean;
 	position: number;
+    options?: string;
 }
 
-export type FieldType = 'select' | 'text' | 'text area' | 'radio' | 'number' | 'date' | 'time';
-export const FieldTypeOptions = ['select', 'text', 'text area', 'radio', 'number', 'date', 'time'];
+export type FieldType = 'select' | 'text' | 'text area' | 'radio' | 'number' | 'date' | 'time' | 'check box';
+export const FieldTypeOptions = ['select', 'text', 'text area', 'radio', 'number', 'date', 'time', 'check box'];
 export type FieldValue = string | number | SelectableValue;
 export interface DefaultValueFactory<T> {
 	(arg: T): FieldValue;

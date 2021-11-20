@@ -7,12 +7,12 @@ import { isNullOrWhitespace } from '@/util/stringUtils';
 const user = useUsers();
 
 const routes: Array<RouteRecordRaw> = [
-	{
-		path: '/',
-		name: 'Home',
-		component: Lists,
-		// props: route => ({ directTo: route.query.previous  })
-	},
+    {
+        path: '/',
+        name: 'Home',
+        component: Lists,
+        // props: route => ({ directTo: route.query.previous  })
+    },
 	{
 		path: '/lists',
 		name: 'Lists',

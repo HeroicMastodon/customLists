@@ -47,12 +47,14 @@ function handleSelect(value: any) {
 <style lang="scss" scoped>
 .select {
 	position: relative;
+  min-width: 5rem;
 	$transitionLength: .15s;
 	.value {
 		$borderThickness: 1px;
 		border-bottom: $borderThickness $text-light solid;
 		position: relative;
 		padding: .25rem;
+    min-height: 1rem;
 
 		&::after {
 			content: "";
@@ -108,6 +110,7 @@ function handleSelect(value: any) {
 		height: 8rem;
 		opacity: 1;
 		padding: .5rem 0;
+    border: $primary solid 1px;
 	}
 }
 </style>

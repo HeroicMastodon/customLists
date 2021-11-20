@@ -5,20 +5,20 @@ import { useRouter } from "vue-router";
 
 	const user = useUsers();
 
-	const isLoggedIn = computed(() => {
-		return !!user.username;
-	});
+	const isLoggedIn = userService.isLoggedIn;
 
 	const router = useRouter();
 
+  
+
 	async function logout() {
 		const result = await userService.logout();
-		if (result) router.replace('/');
+		if (result) await router.replace('/');
 	}
 
 	async function hardLogout() {
 		const result = await userService.hardLogout();
-		if (result) router.replace('/');
+		if (result) await router.replace('/');
 	}
 
 </script>

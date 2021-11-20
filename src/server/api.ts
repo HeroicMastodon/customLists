@@ -65,6 +65,10 @@ class Api {
 		});
 	}
 
+    getAuthToken() {
+        return window.localStorage.getItem("token");
+    }
+
 	async refresh() {
 		const token = window.localStorage.getItem("token");
 		try {

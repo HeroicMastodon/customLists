@@ -1,8 +1,8 @@
 <template>
-	<div :class="`group ${hasContentClass}`">
-		<label>{{ label || "Label" }}</label>
-		<input v-if="isLazy" v-model.lazy="actual" type="text" :maxlength="maxLength" :minlength="minLength"/>
-		<input v-else v-model="actual" :type="type" />
+	<div :class="`group ${type.startsWith('date') ? 'date' : ''} ${hasContentClass}`">
+		<label>{{ label || "" }}</label>
+		<input v-if="isLazy" v-model.lazy="actual" :type="inputType" :maxlength="maxLength" :minlength="minLength"/>
+		<input v-else v-model="actual" :type="inputType" />
 		<div class="btm"></div>
 		<div :data-hover="error || ''" :class="`error ${error ? '' : 'no-hover'}`">{{error || ''}}</div>
 	</div>
@@ -54,7 +54,12 @@ export default defineComponent({
 		minLength: {
 			type: Number,
 			required: false
-		}
+		},
+    type: {
+      type: String,
+      required: false,
+      default: 'text'
+    }
 	},
 	emits: [
 		"update:value",
@@ -68,12 +73,12 @@ export default defineComponent({
 		const hasContentClass = computed(() =>
 			actual.value?.length > 0 ? "has-content" : ""
 		);
-		const type = computed(() => (props.obscureText ? "password" : "text"));
+		const inputType = computed(() => (props.obscureText ? "password" : props.type));
 
 		watchEffect(() => {
-			emit("update:value", actual.value);
+			emit("update:value", `${actual.value}`);
 		});
-		
+
 		watchEffect(() => {
 			actual.value = props.value;
 		})
@@ -100,7 +105,7 @@ export default defineComponent({
 			actual,
 			hasContentClass,
 			isLazy,
-			type,
+			inputType,
 			error,
 			validate
 		};
@@ -129,8 +134,15 @@ export default defineComponent({
 		transition: all ease $transition-length;
 	}
 
+  input[type="date"]::-webkit-calendar-picker-indicator {
+    //display: none;
+    //-webkit-appearance: none;
+    color: white;
+  }
+
 	&.has-content,
-	&:focus-within {
+	&:focus-within,
+  &.date{
 		label {
 			$offset: 0.75rem;
 			$label-padding: -$offset - $v-padding;
@@ -140,14 +152,20 @@ export default defineComponent({
 	}
 
 	&:focus-within {
-		.btm {
-			width: 100%;
-			left: 0;
-		}
+		//.btm {
+		//	width: 100%;
+		//	left: 0;
+		//}
+
+    input::after {
+      width: 100%;
+      left: 0;
+    }
 	}
 	$btm-height: 0.2rem;
 
 	input {
+    $borderThickness: 1px;
 		border: none;
 		border-bottom: ($btm-height / 2) $text-light solid;
 		width: 100%;
@@ -155,9 +173,29 @@ export default defineComponent({
 		background: transparent;
 		color: $text-light;
 
-		&:focus {
+		&:focus,
+    &:focus-within{
 			outline: none;
+
+      &::after {
+        width: 100%;
+      }
 		}
+
+    &::after {
+      content: "";
+
+      background: $primary;
+
+      height: 2px;
+      width: 0;
+
+      position: absolute;
+      bottom: -$borderThickness;
+      left: 0;
+
+      transition: all $transition-length ease;
+    }
 	}
 
 	.btm {
@@ -167,7 +205,8 @@ export default defineComponent({
 		width: 0;
 		transition: all $transition-length ease;
 		z-index: 2;
-		bottom: calc(-1px + 1.5rem);
+		//bottom: calc(-1px + 1.5rem);
+    bottom: 0;
 		left: 50%;
 	}
 
