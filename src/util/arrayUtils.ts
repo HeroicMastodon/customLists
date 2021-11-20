@@ -10,21 +10,13 @@ declare global {
     }
 }
 
-Array.prototype.replace = function<T>(predicate: Predicate<T>, item: T) {
-    console.log('called replace')
-    console.log({test: this})
-    if (!this) return;
-
+Array.prototype.replace = function<T>(this: T[], predicate: Predicate<T>, item: T) {
     const list = this as T[];
     const idx = list.findIndex(predicate);
     list.splice(idx, 1, item);
 }
 
-Array.prototype.remove = function<T>(predicate: Predicate<T>) {
-    console.log('called remove')
-    console.log({test: this})
-    if (!this) return;
-
+Array.prototype.remove = function<T>(this: T[], predicate: Predicate<T>) {
     const list = this as T[];
     const idx = list.findIndex(predicate);
     list.splice(idx, 1);
