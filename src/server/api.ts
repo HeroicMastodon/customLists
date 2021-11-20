@@ -29,7 +29,7 @@ class Api {
 			baseURL: this.baseUrl,
 			headers: {
 				Authorization: `Bearer ${token}`
-			}
+			},
 		});
 	}
 

@@ -25,7 +25,7 @@ watchEffect(() => {
 })
 
 function handleCheck(field: Field, checked: boolean) {
-  field.itemValue = checked ? 'true' : 'false'
+  field.value = checked ? 'true' : 'false'
 }
 
 function generateOptionsArray(options: string) {
@@ -44,41 +44,41 @@ function generateOptionsArray(options: string) {
   <div class="container">
 
     <template v-for="(field, index) in item.fields" :key="index">
-      <template v-if="field.itemType === 'select'">
+      <template v-if="field.type === 'select'">
         <div class="field-group">
           <label class="label" :for="definition[index].name">
             {{ definition[index].name }}
           </label>
           <SelectInput :name="definition[index].name" :options="generateOptionsArray(definition[index].options)"
-                       v-model:value="field.itemValue"
+                       v-model:value="field.value"
           />
         </div>
       </template>
-      <template v-else-if="field.itemType === 'text'">
-        <TextInput class="field-group" v-model:value="field.itemValue" :label="definition[index].name"/>
+      <template v-else-if="field.type === 'text'">
+        <TextInput class="field-group" v-model:value="field.value" :label="definition[index].name"/>
       </template>
-      <template v-else-if="field.itemType === 'text area'">
+      <template v-else-if="field.type === 'text area'">
         <div class="field-group">
           <label :for="definition[index.name]">{{ definition[index].name }}</label>
-          <textarea v-model="field.itemValue"></textarea>
+          <textarea v-model="field.value"></textarea>
         </div>
       </template>
-      <div v-else-if="field.itemType === 'radio'">
+      <div v-else-if="field.type === 'radio'">
       </div>
-      <div v-else-if="field.itemType === 'number'">
-        <TextInput class="field-group" v-model:value="field.itemValue" :label="definition[index].name" type="number"/>
+      <div v-else-if="field.type === 'number'">
+        <TextInput class="field-group" v-model:value="field.value" :label="definition[index].name" type="number"/>
       </div>
-      <div v-else-if="field.itemType === 'date'">
-        <TextInput class="field-group" v-model:value="field.itemValue" :label="definition[index].name" type="date"/>
+      <div v-else-if="field.type === 'date'">
+        <TextInput class="field-group" v-model:value="field.value" :label="definition[index].name" type="date"/>
       </div>
-      <div v-else-if="field.itemType === 'time'">
-        <TextInput class="field-group" v-model:value="field.itemValue" :label="definition[index].name"
+      <div v-else-if="field.type === 'time'">
+        <TextInput class="field-group" v-model:value="field.value" :label="definition[index].name"
                    type="datetime-local"
         />
       </div>
-      <template v-else-if="field.itemType === 'check box'">
+      <template v-else-if="field.type === 'check box'">
         <div class="field-group">
-          <Checkbox :value="field.itemValue === 'true'" :label="definition[index].name"
+          <Checkbox :value="field.value === 'true'" :label="definition[index].name"
                     @update:value="val => handleCheck(field, val)"
           />
         </div>

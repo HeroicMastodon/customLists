@@ -17,24 +17,24 @@ import Modal from "@/components/Modal.vue";
 import Login from "@/views/Login.vue";
 const props = useAttrs();
 console.log(props)
-const itemDef: ItemDefinition = [{ "name": "text", "itemType": "text", "required": false, "position": 0 },
+const itemDef: ItemDefinition = [{ "name": "text", "type": "text", "required": false, "position": 0 },
   {
     "name": "select",
-    "itemType": "select",
+    "type": "select",
     "required": false,
     "position": 1,
     "options": "option 1, option 2, option 3, option 4"
   },
-  { "name": "text area", "itemType": "text area", "required": false, "position": 2 },
-  { "name": "number", "itemType": "number", "required": false, "position": 3 },
-  { "name": "date", "itemType": "date", "required": false, "position": 4 },
-  { "name": "time", "itemType": "time", "required": false, "position": 5 },
-  { "name": "checkbox", "itemType": "check box", "required": false, "position": 6 }]
+  { "name": "text area", "type": "text area", "required": false, "position": 2 },
+  { "name": "number", "type": "number", "required": false, "position": 3 },
+  { "name": "date", "type": "date", "required": false, "position": 4 },
+  { "name": "time", "type": "time", "required": false, "position": 5 },
+  { "name": "checkbox", "type": "check box", "required": false, "position": 6 }]
 const item: Item = {
   fields: itemDef.reduce<Field[]>((prev, curr) => {
     prev.push({
-      itemType: curr.itemType,
-      itemValue: "",
+      type: curr.type,
+      value: "",
       position: curr.position
     });
     return prev;
@@ -44,7 +44,7 @@ const user = useUsers();
 
 const list: List = {
   name: '',
-  itemDefinition: [],
+  fieldDefinitions: [],
   items: []
 }
 

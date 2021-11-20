@@ -1,13 +1,11 @@
 <script lang="ts" setup>
-import { nextTick, reactive, ref, watchEffect } from "vue";
+import { reactive, watchEffect } from "vue";
 import TextInput from "@/components/inputs/TextInput.vue";
 import SelectInput from "../inputs/SelectInput.vue";
 import Checkbox from "@/components/inputs/Checkbox.vue";
 import {
-  FieldType,
   FieldTypeOptions,
   Item,
-  ItemDefinition,
   List,
 } from "@/models/list";
 
@@ -29,22 +27,22 @@ watchEffect(() => {
 
 watchEffect(() => {
   listDefinition.name = props.value.name;
-  listDefinition.itemDefinition = props.value.itemDefinition;
+  listDefinition.fieldDefinitions = props.value.fieldDefinitions;
   listDefinition.items = props.value.items;
 });
 
 function addField() {
-  listDefinition.itemDefinition.push({
+  listDefinition.fieldDefinitions.push({
     name: "",
-    itemType: "text",
+    type: "text",
     required: false,
-    position: listDefinition.itemDefinition.length,
+    position: listDefinition.fieldDefinitions.length,
   });
   updateItems(item => {
     item.fields.push({
-      itemType: "text",
-      itemValue: "",
-      position: listDefinition.itemDefinition.length
+      type: "text",
+      value: "",
+      position: listDefinition.fieldDefinitions.length
     })
   });
 }
@@ -56,7 +54,7 @@ function updateItems(update: (item: Item) => void) {
 }
 
 function updatePositions() {
-  listDefinition.itemDefinition.forEach((item, index) => {
+  listDefinition.fieldDefinitions.forEach((item, index) => {
     item.position = index;
   });
   updateItems(item => item.fields.forEach((field, index) => field.position = index))
@@ -64,7 +62,7 @@ function updatePositions() {
 
 
 function removeField(index: number) {
-  listDefinition.itemDefinition.splice(index, 1);
+  listDefinition.fieldDefinitions.splice(index, 1);
 
   updateItems(item => item.fields.splice(index, 1));
 
@@ -72,12 +70,12 @@ function removeField(index: number) {
 }
 
 function moveFieldUp(index: number) {
-  const item = listDefinition.itemDefinition.splice(index, 1)[0];
+  const item = listDefinition.fieldDefinitions.splice(index, 1)[0];
 
   if (index == 0) {
-    listDefinition.itemDefinition.push(item);
+    listDefinition.fieldDefinitions.push(item);
   } else {
-    listDefinition.itemDefinition.splice(index - 1, 0, item);
+    listDefinition.fieldDefinitions.splice(index - 1, 0, item);
   }
 
   updateItems(item => {
@@ -93,13 +91,13 @@ function moveFieldUp(index: number) {
 }
 
 function moveFieldDown(index: number) {
-  const isLast = index == listDefinition.itemDefinition.length - 1;
-  const item = listDefinition.itemDefinition.splice(index, 1)[0];
+  const isLast = index == listDefinition.fieldDefinitions.length - 1;
+  const item = listDefinition.fieldDefinitions.splice(index, 1)[0];
 
   if (isLast) {
-    listDefinition.itemDefinition.unshift(item);
+    listDefinition.fieldDefinitions.unshift(item);
   } else {
-    listDefinition.itemDefinition.splice(index + 1, 0, item);
+    listDefinition.fieldDefinitions.splice(index + 1, 0, item);
   }
 
   updateItems(item => {
@@ -119,7 +117,7 @@ function moveFieldDown(index: number) {
       <button @click="addField">Add Field</button>
     </div>
     <div
-        v-for="(field, index) in listDefinition.itemDefinition"
+        v-for="(field, index) in listDefinition.fieldDefinitions"
         :key="index"
         class="field"
     >
@@ -130,10 +128,10 @@ function moveFieldDown(index: number) {
       />
       <SelectInput
           :options="FieldTypeOptions"
-          v-model:value="field.itemType"
+          v-model:value="field.type"
           class="field-options"
       />
-      <TextInput class="select-options" v-if="field.itemType === 'select'" v-model:value="field.options" label="Options (comma separated)"/>
+      <TextInput class="select-options" v-if="field.type === 'select'" v-model:value="field.options" label="Options (comma separated)"/>
       <!-- <input type="checkbox" class="checkbox" v-model="field.required" /> -->
       <Checkbox v-model:value="field.required" label="Required"/>
       <div class="controls">
