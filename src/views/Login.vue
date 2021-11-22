@@ -27,7 +27,7 @@ export default defineComponent({
 		directTo: {
 			type: String,
 			required: false,
-			default: '/lists'
+			default: '/'
 		}
 	},
 	setup(props) {

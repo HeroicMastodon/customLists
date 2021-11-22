@@ -6,6 +6,7 @@ import { isNullOrWhitespace } from '@/util/stringUtils';
 
 const user = useUsers();
 
+const loginPath = '/login';
 const routes: Array<RouteRecordRaw> = [
     {
         path: '/',
@@ -14,9 +15,9 @@ const routes: Array<RouteRecordRaw> = [
         // props: route => ({ directTo: route.query.previous  })
     },
 	{
-		path: '/lists',
-		name: 'Lists',
-		component: Lists,
+		path: loginPath,
+		name: 'Login',
+		component: Login,
 	},
 ];
 
@@ -28,9 +29,9 @@ const router = createRouter({
 router.beforeEach(async (to, from, next) => {
 	const isAuthenticated = ( await userService.authenticate() );	
 
-	if (to.path !== '/' && ! isAuthenticated) {
+	if (to.path !== loginPath && ! isAuthenticated) {
 		const redirect: RouteLocationRaw = {
-			path: '/',
+			path: loginPath,
 			query: {
 				previous: to.path
 			}

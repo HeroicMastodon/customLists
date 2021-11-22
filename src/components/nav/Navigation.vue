@@ -1,37 +1,72 @@
 <script lang="ts" setup>
 import { userService, useUsers } from "@/services/userService";
-import { computed } from "vue";
+import { computed, ref, watchEffect } from "vue";
 import { useRouter } from "vue-router";
 
-	const user = useUsers();
+const props = withDefaults(defineProps<{
+  title?: string;
+  isLoggedIn?: boolean;
+  sidebarOpen?: boolean;
+}>(), {
+  title: 'Custom Lists',
+  isLoggedIn: false
+});
 
-	const isLoggedIn = userService.isLoggedIn;
+const emit = defineEmits<{
+  (e: 'update:sidebarOpen', value: boolean): void;
+  (e: 'logout'): void;
+  (e: 'hard-logout'): void;
+  (e: 'toggleSidebar'): void;
+}>();
 
-	const router = useRouter();
+const router = useRouter();
 
-  
 
-	async function logout() {
-		const result = await userService.logout();
-		if (result) await router.replace('/');
-	}
+watchEffect(() => {
+  if (!props.isLoggedIn) router.push('/login');
+})
 
-	async function hardLogout() {
-		const result = await userService.hardLogout();
-		if (result) await router.replace('/');
-	}
+async function logout() {
+  emit('logout');
+}
+
+async function hardLogout() {
+  emit('hard-logout');
+}
+
+function toggleSidebar() {
+  console.log('toggling')
+  emit('toggleSidebar');
+}
 
 </script>
 
 <template>
-	<div v-if="isLoggedIn">
-		<button v-if="isLoggedIn" @click="logout()">Logout</button>
-		<button v-if="isLoggedIn" @click="hardLogout()">Hard Logout</button>
-	</div>
+  <nav class="top-nav">
+    <button class="light" @click="toggleSidebar">{{ sidebarOpen ? 'close' : 'open' }}</button>
+    <h1>
+      {{ title }}
+    </h1>
+    <template v-if="isLoggedIn">
+      <button class="light">Home</button>
+      <button @click="logout" class="light">Logout</button>
+    </template>
+  </nav>
 </template>
 
 <style lang="scss" scoped>
-button {
-	margin: 1rem;
+.top-nav {
+  position: sticky;
+  top: 0;
+
+  display: flex;
+
+  background: $primary;
+
+  h1 {
+    margin: 0;
+    padding: .5rem;
+    text-align: left;
+  }
 }
 </style>

@@ -1,9 +1,7 @@
 <template>
-  <div class="list">Logged in as {{ user.username }}!</div>
 <Modal :open="false">
     <ListForm :value="list"/>
 </Modal>
-  <Login></Login>
   <ItemForm v-model:value="item" :definition="itemDef"/>
 </template>
 

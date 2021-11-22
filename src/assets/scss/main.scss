@@ -46,4 +46,8 @@ button {
 	&:disabled {
 		cursor: not-allowed;
 	}
+
+  &.light {
+    color: $text-light;
+  }
 }

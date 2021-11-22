@@ -1,16 +1,37 @@
 <template>
-  <Navigation/>
-  <router-view/>
+  <Navigation :sidebar-open="sidebarOpen"  @logout="logout" :is-logged-in="isLoggedIn" @toggleSidebar="sidebarOpen = !sidebarOpen" />
+  <div class="app-container">
+    <side-bar :open="sidebarOpen"></side-bar>
+    <div class="content">
+      <router-view/>
+    </div>
+  </div>
 </template>
 
 <script lang="ts" setup>
 import Navigation from '@/components/nav/Navigation.vue'
+import { computed, reactive, ref } from "vue";
+import SideBar from "@/components/nav/SideBar.vue";
+import { userService, useUsers } from "@/services/userService";
+import { useRouter } from "vue-router";
+const sidebarOpen = ref(false);
+const isLoggedIn = ref(userService.isLoggedIn);
+const router = useRouter();
 
+
+async function logout() {
+  console.log('logging out')
+  await userService.logout();
+  await router.push('/login');
+}
 </script>
 
 <style lang="scss">
 body {
   background: $darkest;
+  margin: 0;
+  min-width: 320px;
+  overflow: auto;
 }
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
@@ -19,6 +40,15 @@ body {
   text-align: center;
   color: $text-light;
   height: 100%;
+}
+
+.app-container {
+  display: flex;
+
+  .content {
+    display: initial;
+    width: 100%;
+  }
 }
 
 #nav {
