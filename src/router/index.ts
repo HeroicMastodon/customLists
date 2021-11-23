@@ -27,8 +27,8 @@ const router = createRouter({
 });
 
 router.beforeEach(async (to, from, next) => {
-	const isAuthenticated = ( await userService.authenticate() );	
-
+	const isAuthenticated = ( await userService.authenticate() );
+    console.log({isAuthenticated, to, from})
 	if (to.path !== loginPath && ! isAuthenticated) {
 		const redirect: RouteLocationRaw = {
 			path: loginPath,
@@ -40,7 +40,14 @@ router.beforeEach(async (to, from, next) => {
 		next(redirect);
 		return;
 	}
+    if (to.path === loginPath && isAuthenticated) {
+        const redirect: RouteLocationRaw = {
+            path: "/"
+        };
 
+        next(redirect);
+        return;
+    }
 
 	next();
 });

@@ -39,6 +39,10 @@ function toggleSidebar() {
   emit('toggleSidebar');
 }
 
+async function goHome() {
+  await router.push('/');
+}
+
 </script>
 
 <template>
@@ -48,7 +52,7 @@ function toggleSidebar() {
       {{ title }}
     </h1>
     <template v-if="isLoggedIn">
-      <button class="light">Home</button>
+      <button @click="goHome" class="light">Home</button>
       <button @click="logout" class="light">Logout</button>
     </template>
   </nav>

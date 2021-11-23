@@ -2,6 +2,7 @@ import { Item, List } from "@/models/list";
 import { reactive, readonly } from "vue";
 import { api } from "@/server/api";
 import { AxiosResponse } from "axios";
+import "@/util/arrayUtils"
 
 export interface ApiError {
     message: string;
@@ -14,7 +15,7 @@ function getErrorMessage(response: AxiosResponse) {
 }
 
 function getLists() {
-    return readonly(store.lists);
+    return readonly(store);
 }
 
 function getItemsList(item: Item) {
@@ -24,10 +25,12 @@ function getItemsList(item: Item) {
     return list;
 }
 
+const baseUrl = "customlists";
+
 export const listService = {
     getLists,
     fetchLists: async () => {
-        const response = await api.get<List[]>("");
+        const response = await api.get<List[]>(baseUrl);
 
         if (response.status != 200) throw new Error(getErrorMessage(response));
         store.lists = response.data as List[];
@@ -35,7 +38,7 @@ export const listService = {
         return getLists();
     },
     createList: async (list: List) => {
-        const response = await api.post<List>("", list);
+        const response = await api.post<List>(baseUrl, list);
         if (response.status != 200) throw new Error(getErrorMessage(response));
 
         store.lists.push(response.data);
@@ -43,7 +46,7 @@ export const listService = {
         return getLists();
     },
     updateList: async (list: List) => {
-        const response = await api.patch<List>("", list);
+        const response = await api.patch<List>(baseUrl, list);
         if (response.status != 200) throw new Error(getErrorMessage(response));
 
         store.lists.replace(item => item.id == list.id, list);
@@ -52,7 +55,7 @@ export const listService = {
     },
     deleteList: async (list: List) => {
         if (!list.id) throw new Error("Cannot delete list with no id");
-        const response = await api.delete<List>(list.id);
+        const response = await api.delete<List>(baseUrl + '/' + list.id);
 
         if (response.status !== 200) throw new Error(getErrorMessage(response));
 
@@ -61,7 +64,7 @@ export const listService = {
         return getLists();
     },
     createItem: async (item: Item) => {
-        const response = await api.post<Item>("item", item);
+        const response = await api.post<Item>(baseUrl + "/item", item);
 
         if (response.status !== 200) throw new Error(getErrorMessage(response));
 
@@ -71,7 +74,7 @@ export const listService = {
         return readonly(list);
     },
     updateItem: async (item: Item) => {
-        const response = await api.post<Item>("item", item);
+        const response = await api.post<Item>(baseUrl + "/item", item);
 
         if (response.status !== 200) throw new Error(getErrorMessage(response));
         const list = getItemsList(item);
@@ -81,7 +84,7 @@ export const listService = {
     },
     deleteItem: async (item: Item) => {
         if (!item.id) throw new Error("Cannot delete item with no id");
-        const response = await api.delete(`item/${item.id}`);
+        const response = await api.delete(`${baseUrl}/item/${item.id}`);
 
         if (response.status != 200) throw new Error(getErrorMessage(response));
 

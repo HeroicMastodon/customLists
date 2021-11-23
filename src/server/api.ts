@@ -34,22 +34,26 @@ class Api {
 	}
 
 	async get<T>(url: string, config?: AxiosRequestConfig): Promise<AxiosResponse<T>>{
-		await this.refreshIfNeeded();
+        const refreshError = await this.refreshIfNeeded();
+        if (refreshError) return refreshError;
 		return this.client.get<T>(url, config);
 	}
 
 	async post<T>(url: string, payload: any, config?: AxiosRequestConfig): Promise<AxiosResponse<T>> {
-		await this.refreshIfNeeded();
+        const refreshError = await this.refreshIfNeeded();
+        if (refreshError) return refreshError;
 		return this.client.post(url, payload, config);
 	}
 
 	async patch<T>(url: string, payload: any, config?: AxiosRequestConfig): Promise<AxiosResponse<T>> {
-		await this.refreshIfNeeded();
+        const refreshError = await this.refreshIfNeeded();
+        if (refreshError) return refreshError;
 		return this.client.patch<T>(url, payload, config);
 	}
 
 	async delete<T>(url: string, config?: AxiosRequestConfig): Promise<AxiosResponse<T>> {
-		await this.refreshIfNeeded();
+        const refreshError = await this.refreshIfNeeded();
+        if (refreshError) return refreshError;
 		return this.client.delete(url, config);
 	}
 
@@ -73,19 +77,20 @@ class Api {
 		const token = window.localStorage.getItem("token");
 		try {
 			const result = await this.client.put('/user', {
-				jwtToken: token
+				jwtToken: token,
 			});
 
-			if (result.status != 200) return false;
+			if (result.status != 200) return result;
 
 			const data = result.data;
 
 			window.localStorage.setItem("token", data.jwtToken);
 			window.localStorage.setItem("expires", data.jwtExpirationDate);
-			return true;
+			return;
 		} catch (e) {
-			console.log(e);
-			return false;
+            const aE = e as AxiosError;
+			console.log({aE});
+			return aE.response;
 		}
 	}
 	
@@ -93,13 +98,13 @@ class Api {
 		const token = window.localStorage.getItem("token");
 		const expires = window.localStorage.getItem("expires");
 
-		if (! expires) return false;
-		if (! token) return false;
+		if (! expires) return;
+		if (! token) return;
 
 		const expirationDate = new Date(expires);
 		if (expirationDate.toISOString() < new Date().toISOString()) return this.refresh();
 
-		return true;
+		return;
 	}
 }
 

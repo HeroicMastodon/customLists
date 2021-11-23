@@ -6,6 +6,15 @@ export interface List {
 	items: Item[];
 }
 
+export const defaultList = (): List => {
+    return {
+        name: "",
+        fieldDefinitions: [],
+        items: []
+    }
+}
+
+
 
 export interface Item {
     id?: string;
