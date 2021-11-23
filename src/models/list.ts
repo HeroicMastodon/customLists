@@ -1,31 +1,39 @@
 export interface List {
+    id?: string;
+    ownerId?: string;
 	name: string;
-	itemDefinition: ItemDefinition;
+	fieldDefinitions: ItemDefinition;
 	items: Item[];
 }
 
 
 export interface Item {
+    id?: string;
 	fields: Field[];
+    listId: string;
 }
 
 export type ItemDefinition = FieldDefinition[];
 
 
 export interface Field {
-	itemType: FieldType;
-	itemValue: FieldValue;
+	type: FieldType;
+	value: FieldValue;
+	position: number;
 }
 
 export interface FieldDefinition<T = any> {
-	itemType: FieldType;
+	name: string;
+	type: FieldType;
 	defaultValue?: FieldValue | DefaultValueFactory<T>;
 	required: boolean;
+	position: number;
+    options?: string;
 }
 
-export type FieldType = 'select' | 'text' | 'text area' | 'radio' | 'number' | 'date' | 'time';
-export const FieldTypeOptions = ['select', 'text', 'text area', 'radio', 'number', 'date', 'time'];
-export type FieldValue = string | number | SelectableValue;
+export type FieldType = 'select' | 'text' | 'text area' | 'radio' | 'number' | 'date' | 'time' | 'check box';
+export const FieldTypeOptions = ['select', 'text', 'text area', 'radio', 'number', 'date', 'time', 'check box'];
+export type FieldValue = string;
 export interface DefaultValueFactory<T> {
 	(arg: T): FieldValue;
 }

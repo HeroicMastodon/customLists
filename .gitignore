@@ -1,3 +1,4 @@
 node_modules
 tests/e2e/screenshots
 tests/e2e/videos
+.idea/

@@ -1,21 +1,23 @@
-import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router';
+import { createRouter, createWebHistory, LocationAsPath, LocationQueryRaw, RouteLocationRaw, RouteRecordRaw } from 'vue-router';
 import Login from '../views/Login.vue';
 import Lists from '../views/Lists.vue';
-import { useUsers } from '@/services/userService';
+import { useUsers, userService } from '@/services/userService';
 import { isNullOrWhitespace } from '@/util/stringUtils';
 
 const user = useUsers();
 
+const loginPath = '/login';
 const routes: Array<RouteRecordRaw> = [
+    {
+        path: '/',
+        name: 'Home',
+        component: Lists,
+        // props: route => ({ directTo: route.query.previous  })
+    },
 	{
-		path: '/',
-		name: 'Home',
+		path: loginPath,
+		name: 'Login',
 		component: Login,
-	},
-	{
-		path: '/lists',
-		name: 'Lists',
-		component: Lists,
 	},
 ];
 
@@ -24,12 +26,22 @@ const router = createRouter({
 	routes,
 });
 
-router.beforeEach((to, from, next) => {
-	if (to.path !== '/' && isNullOrWhitespace(user.username)) {
-    next('/');
-    return;
+router.beforeEach(async (to, from, next) => {
+	const isAuthenticated = ( await userService.authenticate() );	
+
+	if (to.path !== loginPath && ! isAuthenticated) {
+		const redirect: RouteLocationRaw = {
+			path: loginPath,
+			query: {
+				previous: to.path
+			}
+		};
+
+		next(redirect);
+		return;
 	}
-  
+
+
 	next();
 });
 
