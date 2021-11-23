@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { reactive, watchEffect } from "vue";
+import { reactive, watch, watchEffect } from "vue";
 import TextInput from "@/components/inputs/TextInput.vue";
 import SelectInput from "../inputs/SelectInput.vue";
 import Checkbox from "@/components/inputs/Checkbox.vue";
@@ -22,14 +22,16 @@ const emits =
 const listDefinition = reactive(props.value);
 
 watchEffect(() => {
-  emits("update:value", listDefinition);
+  // listDefinition.name = props.value.name;
+  // listDefinition.fieldDefinitions = props.value.fieldDefinitions;
+  // listDefinition.items = props.value.items;
+  Object.assign(listDefinition, props.value)
 });
+// watchEffect(() => {
+//   emits("update:value", listDefinition);
+// });
 
-watchEffect(() => {
-  listDefinition.name = props.value.name;
-  listDefinition.fieldDefinitions = props.value.fieldDefinitions;
-  listDefinition.items = props.value.items;
-});
+
 
 function addField() {
   listDefinition.fieldDefinitions.push({
@@ -51,6 +53,7 @@ function updateItems(update: (item: Item) => void) {
   for (let item of listDefinition.items) {
     update(item)
   }
+  emits('update:value', listDefinition);
 }
 
 function updatePositions() {
