@@ -21,7 +21,9 @@ const router = useRouter();
 
 async function logout() {
   console.log('logging out')
-  await userService.logout();
+  const result = await userService.logout();
+  if (!result) return;
+
   await router.push('/login');
 }
 </script>
