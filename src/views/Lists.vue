@@ -13,21 +13,20 @@
   </Modal>
   <div class="heading">
     <h2>Overview</h2>
-    <div class="actions">
-      <button @click="openForm()">New</button>
-    </div>
+    <button @click="openForm()">New</button>
+    <button @click="expanded = !expanded">Expand</button>
   </div>
   <div class="lists-container">
     <template v-for="list in state.lists" :key="list.id">
       <div @click="openList(list.id)" class="list">
         <h3>{{ list.name }}</h3>
-        <div v-if="expanded" :class="details">
+        <div v-if="expanded" class="details">
           <div v-for="(field, idx) in list.fieldDefinitions" :key="idx">
             {{ field.name }}: {{ field.type }}
           </div>
         </div>
-        <button class="edit-btn" @click.stop="openForm(list)">Edit</button>
-        <button class="delete-btn" @click.stop="openDeleteConfirmation(list)">Delete</button>
+        <button class="list-btn edit-btn" @click.stop="openForm(list)">Edit</button>
+        <button class="list-btn delete-btn" @click.stop="openDeleteConfirmation(list)">Delete</button>
       </div>
     </template>
   </div>
@@ -107,6 +106,49 @@ async function handleUpdate(updatedList: List) {
 </script>
 
 <style lang="scss" scoped>
-.list {
+.heading {
+  display: flex;
+  margin: 1rem;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 1rem;
+}
+.lists-container {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 1rem;
+  gap: 1rem;
+  justify-content: center;
+
+  .list {
+    background-color: $dark;
+    padding: .5rem;
+    border-radius: 5px;
+    position: relative;
+    min-width: 8rem;
+
+    .details {
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: flex-start;
+      gap: .5rem;
+    }
+
+
+    .list-btn {
+      position: absolute;
+
+      &.edit-btn {
+        right: 0;
+        bottom: 0;
+      }
+
+      &.delete-btn {
+        right: 0;
+        top: 0;
+      }
+    }
+  }
 }
 </style>
