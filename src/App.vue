@@ -1,7 +1,7 @@
 <template>
   <Navigation :sidebar-open="sidebarOpen"  @logout="logout" :is-logged-in="isLoggedIn" @toggleSidebar="sidebarOpen = !sidebarOpen" />
   <div class="app-container">
-    <side-bar :open="sidebarOpen"></side-bar>
+    <side-bar :open="sidebarOpen" :items="listNames"></side-bar>
     <div class="content">
       <router-view/>
     </div>
@@ -14,6 +14,7 @@ import { computed, reactive, ref } from "vue";
 import SideBar from "@/components/nav/SideBar.vue";
 import { userService, useUsers } from "@/services/userService";
 import { useRouter } from "vue-router";
+import { listService } from "@/services/listService";
 const sidebarOpen = ref(false);
 const isLoggedIn = ref(userService.isLoggedIn);
 const router = useRouter();
@@ -26,6 +27,14 @@ async function logout() {
 
   await router.push('/login');
 }
+
+
+const lists = ref(listService.getLists());
+
+const listNames = computed(() => lists.value.lists.reduce<string[]>((ret, item) => {
+  ret.push(item.name);
+  return ret;
+}, []))
 </script>
 
 <style lang="scss">

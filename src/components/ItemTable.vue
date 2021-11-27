@@ -36,5 +36,5 @@ const emit = defineEmits<{
 </template>
 
 <style lang="scss" scoped>
-
+// TODO: Make this table look good
 </style>

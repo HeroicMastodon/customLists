@@ -1,12 +1,15 @@
 <script lang="ts" setup>
 const props = defineProps<{
-  open: boolean
+  open: boolean;
+  items: string[];
 }>();
+
+// TODO: Make this sidebar look good
 </script>
 
 <template>
   <div :class="`side-bar ${open ? 'open' : ''}`">
-    side bar
+    {{ items }}
   </div>
 </template>
 

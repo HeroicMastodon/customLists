@@ -17,11 +17,12 @@ const emit = defineEmits<{
 <template>
   <div class="container">
     <div class="card">
+<!--      TODO: Create card component from code on the list overview -->
       {{ items }}
     </div>
   </div>
 </template>
 
 <style lang="scss" scoped>
-
+// TODO: Contain the cards
 </style>
