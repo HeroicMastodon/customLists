@@ -1,6 +1,8 @@
 import { createRouter, createWebHistory, LocationAsPath, LocationQueryRaw, RouteLocationRaw, RouteRecordRaw } from 'vue-router';
 import Login from '../views/Login.vue';
 import Lists from '../views/Lists.vue';
+import List from '../views/List.vue';
+
 import { useUsers, userService } from '@/services/userService';
 import { isNullOrWhitespace } from '@/util/stringUtils';
 
@@ -19,6 +21,12 @@ const routes: Array<RouteRecordRaw> = [
 		name: 'Login',
 		component: Login,
 	},
+    {
+        path: '/:id',
+        name: 'List',
+        component: List,
+        props: true
+    },
 ];
 
 const router = createRouter({

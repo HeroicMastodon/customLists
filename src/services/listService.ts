@@ -74,7 +74,7 @@ export const listService = {
         return readonly(list);
     },
     updateItem: async (item: Item) => {
-        const response = await api.post<Item>(baseUrl + "/item", item);
+        const response = await api.patch<Item>(baseUrl + "/item", item);
 
         if (response.status !== 200) throw new Error(getErrorMessage(response));
         const list = getItemsList(item);
@@ -84,7 +84,7 @@ export const listService = {
     },
     deleteItem: async (item: Item) => {
         if (!item.id) throw new Error("Cannot delete item with no id");
-        const response = await api.delete(`${baseUrl}/item/${item.id}`);
+        const response = await api.delete(`${baseUrl}/${item.listId}/${item.id}`);
 
         if (response.status != 200) throw new Error(getErrorMessage(response));
 

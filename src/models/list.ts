@@ -22,6 +22,22 @@ export interface Item {
     listId: string;
 }
 
+export const defaultItem = (definition: ItemDefinition, listId: string): Item => {
+    const fields: Field[] = [];
+
+    definition.forEach(field => {
+       fields.push({
+           value: field.defaultValue ?? "",
+           position: field.position,
+           type: field.type
+       });
+    });
+    return {
+        fields,
+        listId
+    }
+}
+
 export type ItemDefinition = FieldDefinition[];
 
 
@@ -34,7 +50,7 @@ export interface Field {
 export interface FieldDefinition<T = any> {
 	name: string;
 	type: FieldType;
-	defaultValue?: FieldValue | DefaultValueFactory<T>;
+	defaultValue?: FieldValue;
 	required: boolean;
 	position: number;
     options?: string;

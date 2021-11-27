@@ -84,8 +84,7 @@ class Api {
 
 			const data = result.data;
 
-			window.localStorage.setItem("token", data.jwtToken);
-			window.localStorage.setItem("expires", data.jwtExpirationDate);
+            this.updateApiHeaders(data.jwtToken, data.jwtExpirationDate);
 			return;
 		} catch (e) {
             const aE = e as AxiosError;
@@ -102,7 +101,9 @@ class Api {
 		if (! token) return;
 
 		const expirationDate = new Date(expires);
-		if (expirationDate.toISOString() < new Date().toISOString()) return this.refresh();
+        const s = expirationDate.toISOString();
+        const s1 = new Date().toISOString();
+        if (s < s1) return this.refresh();
 
 		return;
 	}

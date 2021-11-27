@@ -11,24 +11,26 @@
       <button @click="deleteOpen = false">No</button>
     </div>
   </Modal>
-  <div class="heading">
-    <h2>Overview</h2>
-    <button @click="openForm()">New</button>
-    <button @click="expanded = !expanded">Expand</button>
-  </div>
-  <div class="lists-container">
-    <template v-for="list in state.lists" :key="list.id">
-      <div @click="openList(list.id)" class="list">
-        <h3>{{ list.name }}</h3>
-        <div v-if="expanded" class="details">
-          <div v-for="(field, idx) in list.fieldDefinitions" :key="idx">
-            {{ field.name }}: {{ field.type }}
+  <div class="container">
+    <div class="heading">
+      <h2>Overview</h2>
+      <button @click="openForm()">New</button>
+      <button @click="expanded = !expanded">Expand</button>
+    </div>
+    <div class="lists-container">
+      <template v-for="list in state.lists" :key="list.id">
+        <div @click="openList(list.id)" class="list">
+          <h3>{{ list.name }}</h3>
+          <div v-if="expanded" class="details">
+            <div v-for="(field, idx) in list.fieldDefinitions" :key="idx">
+              {{ field.name }}: {{ field.type }}
+            </div>
           </div>
+          <button class="list-btn edit-btn" @click.stop="openForm(list)">Edit</button>
+          <button class="list-btn delete-btn" @click.stop="openDeleteConfirmation(list)">Delete</button>
         </div>
-        <button class="list-btn edit-btn" @click.stop="openForm(list)">Edit</button>
-        <button class="list-btn delete-btn" @click.stop="openDeleteConfirmation(list)">Delete</button>
-      </div>
-    </template>
+      </template>
+    </div>
   </div>
 </template>
 
@@ -38,12 +40,14 @@ import ListForm from "@/components/Forms/ListForm.vue";
 import { defaultList, List } from "@/models/list";
 import Modal from "@/components/Modal.vue";
 import { listService } from "@/services/listService";
+import { useRouter } from "vue-router";
 
 const state = listService.getLists();
 const expanded = ref(false);
 const formOpen = ref(false);
 const deleteOpen = ref(false);
 const list = reactive({ value: defaultList() });
+const router = useRouter();
 
 onMounted(async () => {
   await listService.fetchLists();
@@ -96,6 +100,7 @@ async function handleDelete() {
 
 async function openList(id: string) {
   console.log('opening list with id: ' + id);
+  await router.push('/' + id);
 }
 
 async function handleUpdate(updatedList: List) {
@@ -106,47 +111,55 @@ async function handleUpdate(updatedList: List) {
 </script>
 
 <style lang="scss" scoped>
-.heading {
+.container {
+  max-width: 40rem;
   display: flex;
-  margin: 1rem;
-  justify-content: flex-start;
-  align-items: center;
-  gap: 1rem;
-}
-.lists-container {
-  display: flex;
-  flex-wrap: wrap;
-  margin: 1rem;
-  gap: 1rem;
+  flex-direction: column;
   justify-content: center;
+  align-items: center;
 
-  .list {
-    background-color: $dark;
-    padding: .5rem;
-    border-radius: 5px;
-    position: relative;
-    min-width: 8rem;
+  .heading {
+    display: flex;
+    margin: 1rem;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 1rem;
+  }
+  .lists-container {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 1rem;
+    gap: 1rem;
+    justify-content: center;
 
-    .details {
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-start;
-      align-items: flex-start;
-      gap: .5rem;
-    }
+    .list {
+      background-color: $dark;
+      padding: .5rem;
+      border-radius: 5px;
+      position: relative;
+      min-width: 8rem;
 
-
-    .list-btn {
-      position: absolute;
-
-      &.edit-btn {
-        right: 0;
-        bottom: 0;
+      .details {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: flex-start;
+        gap: .5rem;
       }
 
-      &.delete-btn {
-        right: 0;
-        top: 0;
+
+      .list-btn {
+        position: absolute;
+
+        &.edit-btn {
+          right: 0;
+          bottom: 0;
+        }
+
+        &.delete-btn {
+          right: 0;
+          top: 0;
+        }
       }
     }
   }
