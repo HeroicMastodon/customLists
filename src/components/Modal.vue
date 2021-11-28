@@ -59,7 +59,7 @@ export default defineComponent({
 	width: 700px;
 	max-width: 90vw;
 	margin: 0px auto;
-	padding: 1em;
+	padding: 1rem;
 	background-color: $dark;
 	border-radius: 8px;
 	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33);
@@ -125,18 +125,17 @@ export default defineComponent({
 		position: absolute;
 		bottom: 0;
 		box-sizing: border-box;
-		width: 100%;
+		width: 100vw;
 	}
 
 	.modal-container {
 		transition: transform 0.3s ease;
-		overflow-y: auto;
+		overflow: auto;
 		opacity: 1;
-		width: 100%;
-		max-width: unset;
+		width: 100vw;
+    margin: auto;
 		border-bottom-left-radius: 0;
 		border-bottom-right-radius: 0;
-		padding-bottom: 0;
 	}
 
 	.modal-enter-active {

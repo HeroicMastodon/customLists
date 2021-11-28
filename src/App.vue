@@ -3,7 +3,7 @@
   <div class="app-container">
     <side-bar :open="sidebarOpen" :items="listNames"></side-bar>
     <div class="content">
-      <router-view/>
+      <router-view :key="route.params.id"/>
     </div>
   </div>
 </template>
@@ -13,11 +13,12 @@ import Navigation from '@/components/nav/Navigation.vue'
 import { computed, reactive, ref } from "vue";
 import SideBar from "@/components/nav/SideBar.vue";
 import { userService, useUsers } from "@/services/userService";
-import { useRouter } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import { listService } from "@/services/listService";
 const sidebarOpen = ref(false);
 const isLoggedIn = ref(userService.isLoggedIn);
 const router = useRouter();
+const route = useRoute();
 
 
 async function logout() {
@@ -31,8 +32,8 @@ async function logout() {
 
 const lists = ref(listService.getLists());
 
-const listNames = computed(() => lists.value.lists.reduce<string[]>((ret, item) => {
-  ret.push(item.name);
+const listNames = computed(() => lists.value.lists.reduce<{name: string; path: string;}[]>((ret, item) => {
+  ret.push({name: item.name, path: item.id ?? "" });
   return ret;
 }, []))
 </script>

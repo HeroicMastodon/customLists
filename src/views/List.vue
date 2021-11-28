@@ -100,5 +100,11 @@ function updateView(newView: View) {
 </template>
 
 <style scoped>
+.items-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem;
+}
 
 </style>

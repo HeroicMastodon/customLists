@@ -5,7 +5,6 @@
 			<TextInput
 				v-model:value.lazy="usernameActual"
 				label="Username"
-				:maxLength="16"
 				v-model:hasError="errors[0]"
 			/>
 			<TextInput

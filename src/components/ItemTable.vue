@@ -36,5 +36,65 @@ const emit = defineEmits<{
 </template>
 
 <style lang="scss" scoped>
-// TODO: Make this table look good
+table {
+  width: 100%;
+  background-color: $dark;
+  text-align: center;
+  padding: 1rem;
+  border-radius: 5px;
+  border-collapse: collapse;
+
+  tr {
+    $border: solid $text-light 2px;
+
+    th, td {
+      padding: 1rem;
+      box-sizing: border-box;
+      border: $border;
+      resize: horizontal;
+      overflow: auto;
+      &:first-child {
+        text-align: left;
+        border-left: none;
+      }
+
+      &:last-child {
+        text-align: right;
+        border-right: none;
+      }
+
+      &:only-child {
+        text-align: center;
+        border: none;
+      }
+    }
+
+    th {
+
+    }
+
+    td {
+
+    }
+
+    &:last-child {
+      th, td {
+        border-bottom: none;
+      }
+    }
+
+    &:only-child {
+      th, td {
+        border-bottom: none;
+        border-top: none;
+      }
+    }
+
+    &:first-child {
+      th, td {
+        border-top: none;
+      }
+    }
+  }
+}
 </style>

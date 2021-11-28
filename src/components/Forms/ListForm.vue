@@ -167,6 +167,7 @@ function moveFieldDown(index: number) {
     justify-content: center;
     align-items: center;
     gap: 1rem;
+    flex-wrap: wrap;
 
     .field-name {
       width: 8rem;
