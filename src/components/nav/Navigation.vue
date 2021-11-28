@@ -47,13 +47,16 @@ async function goHome() {
 
 <template>
   <nav class="top-nav">
-    <button class="light" @click="toggleSidebar">{{ sidebarOpen ? 'close' : 'open' }}</button>
+    <button class="light" @click="toggleSidebar">
+      <span v-if="!sidebarOpen" class="material-icons-outlined">arrow_right_alt</span>
+      <span v-else class="material-icons-outlined">arrow_left</span>
+    </button>
     <h1>
       {{ title }}
     </h1>
     <template v-if="isLoggedIn">
-      <button @click="goHome" class="light">Home</button>
-      <button @click="logout" class="light">Logout</button>
+      <button @click="goHome" class="light"><span class="material-icons-outlined">home</span></button>
+      <button @click="logout" class="light"><span class="material-icons-outlined">logout</span></button>
     </template>
   </nav>
 </template>

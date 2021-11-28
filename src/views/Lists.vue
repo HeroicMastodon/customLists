@@ -1,11 +1,12 @@
 <template>
   <Modal :open="formOpen" @close="handleFormClose">
-    <ListForm v-model:value="list.value" />
-<!--    <ListForm :value="list.value" @update:value="handleUpdate"/>-->
+    <ListForm v-model:value="list.value"/>
+    <!--    <ListForm :value="list.value" @update:value="handleUpdate"/>-->
   </Modal>
   <Modal :open="deleteOpen" @close="deleteOpen = false">
     <h2> Are you sure?</h2>
-    <p>Do you want to delete list "<b>{{ list.value.name }}</b>" containing <b>{{ list.value.items.length }}</b> items?</p>
+    <p>Do you want to delete list "<b>{{ list.value.name }}</b>" containing <b>{{ list.value.items.length }}</b> items?
+    </p>
     <div class="btns">
       <button class="outline" @click="handleDelete">Yes</button>
       <button @click="deleteOpen = false">No</button>
@@ -14,8 +15,16 @@
   <div class="container">
     <div class="heading">
       <h2>Overview</h2>
-      <button @click="openForm()">New</button>
-      <button @click="expanded = !expanded">Expand</button>
+      <button @click="openForm()">
+       <span class="material-icons-outlined">
+        add_circle_outline
+        </span>
+      </button>
+      <button @click="expanded = !expanded">
+       <span class="material-icons-outlined">
+expand
+</span>
+      </button>
     </div>
     <div class="lists-container">
       <template v-for="list in state.lists" :key="list.id">
@@ -26,8 +35,12 @@
               {{ field.name }}: {{ field.type }}
             </div>
           </div>
-          <button class="list-btn edit-btn" @click.stop="openForm(list)">Edit</button>
-          <button class="list-btn delete-btn" @click.stop="openDeleteConfirmation(list)">Delete</button>
+          <button class="list-btn edit-btn" @click.stop="openForm(list)">
+            <span class="material-icons-outlined">edit</span>
+          </button>
+          <button class="list-btn delete-btn" @click.stop="openDeleteConfirmation(list)">
+            <span class="material-icons-outlined">delete</span>
+          </button>
         </div>
       </template>
     </div>
@@ -111,6 +124,16 @@ async function handleUpdate(updatedList: List) {
 </script>
 
 <style lang="scss" scoped>
+button {
+  border-radius: 50%;
+  padding: 0;
+  height: 1.3em;
+  width: 1.3em;
+  margin: .2rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 .container {
   max-width: 40rem;
   display: flex;
@@ -125,6 +148,7 @@ async function handleUpdate(updatedList: List) {
     align-items: center;
     gap: 1rem;
   }
+
   .lists-container {
     display: flex;
     flex-wrap: wrap;
@@ -150,6 +174,13 @@ async function handleUpdate(updatedList: List) {
 
       .list-btn {
         position: absolute;
+        //background: transparent;
+        //color: $text-light;
+        border-radius: 50%;
+        padding: 0;
+        height: 1.3em;
+        width: 1.3em;
+        margin: .2rem;
 
         &.edit-btn {
           right: 0;

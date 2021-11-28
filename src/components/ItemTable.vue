@@ -29,13 +29,23 @@ const emit = defineEmits<{
         {{ field.value }}
       </td>
       <td>
-        <button @click.stop="emit('delete', item)">Delete</button>
+        <button @click.stop="emit('delete', item)">
+         <span class="material-icons-outlined">
+delete
+</span>
+        </button>
       </td>
     </tr>
   </table>
 </template>
 
 <style lang="scss" scoped>
+button {
+  border-radius: 50%;
+  padding: 0;
+  height: 1.5rem;
+  width: 1.5rem;
+}
 table {
   width: 100%;
   background-color: $dark;

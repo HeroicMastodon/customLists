@@ -4,6 +4,9 @@
 				<div class="modal-wrapper">
 					<div class="modal-container">
 						<slot></slot>
+            <button @click="close()">
+              <span class="material-icons-outlined">close</span>
+            </button>
 					</div>
 				</div>
 			</div>
@@ -41,6 +44,7 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
+
 .modal-mask {
 	position: fixed;
 	z-index: 100;
@@ -66,7 +70,24 @@ export default defineComponent({
 	font-family: Helvetica, Arial, sans-serif;
 	max-height: 90vh;
 	min-height: 10vh;
+  position: relative;
 	// overflow-y: auto;
+
+  button {
+    position: absolute;
+    top: 0;
+    right: 0;
+
+    border-radius: 50%;
+    padding: 0;
+    height: 1.3em;
+    width: 1.3em;
+    margin: 1rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 150;
+  }
 }
 
 .modal-wrapper {

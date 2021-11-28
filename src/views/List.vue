@@ -84,9 +84,15 @@ function updateView(newView: View) {
   <div class="container">
     <div class="heading">
       <h2>{{ list.name }}</h2>
-      <button @click="openForm()">New</button>
-      <button @click="updateView('card')">Card</button>
-      <button @click="updateView('table')">Table</button>
+      <button @click="openForm()">
+       <span class="material-icons-outlined">
+add_circle_outline
+</span>
+      </button>
+<!--      <button @click="updateView('card')">-->
+<!--        -->
+<!--      </button>-->
+<!--      <button @click="updateView('table')">Table</button>-->
     </div>
     <div class="items-container">
       <ItemCard v-if="view === 'card'" :definition="list.fieldDefinitions" :items="list.items" @edit="openForm"
@@ -107,4 +113,22 @@ function updateView(newView: View) {
   padding: 1rem;
 }
 
+.heading {
+  display: flex;
+  margin: 1rem;
+  gap: 1rem;
+  align-items: center;
+
+}
+
+button {
+  border-radius: 50%;
+  padding: 0;
+  height: 1.3em;
+  width: 1.3em;
+  margin: .2rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 </style>
