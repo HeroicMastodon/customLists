@@ -4,11 +4,14 @@ import axios, { AxiosError, AxiosInstance, AxiosRequestConfig, AxiosResponse } f
 export interface ApiResponse {
 	success: boolean;
 	error?: string;
+    message?: string;
 }
 
 export function handleException(e: unknown): ApiResponse {
-	const error = e as AxiosError<ApiResponse>;
-	if (error.response && error.response.data) return error.response.data;
+	const error = e as AxiosError<ApiResponse|string>;
+	if (error.response) {
+        return typeof error.response.data === "string" ? {error: error.response.statusText, success: false}: {error: error.response.data.message, success: error.response.data.success};
+    }
 
 	return {
 		success: false

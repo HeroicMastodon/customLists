@@ -124,16 +124,6 @@ async function handleUpdate(updatedList: List) {
 </script>
 
 <style lang="scss" scoped>
-button {
-  border-radius: 50%;
-  padding: 0;
-  height: 1.3em;
-  width: 1.3em;
-  margin: .2rem;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
 .container {
   max-width: 40rem;
   display: flex;
@@ -141,6 +131,16 @@ button {
   justify-content: center;
   align-items: center;
 
+  button {
+    border-radius: 50%;
+    padding: 0;
+    height: 1.3em;
+    width: 1.3em;
+    margin: .2rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
   .heading {
     display: flex;
     margin: 1rem;
@@ -162,6 +162,7 @@ button {
       border-radius: 5px;
       position: relative;
       min-width: 8rem;
+      cursor: pointer;
 
       .details {
         display: flex;
@@ -194,5 +195,12 @@ button {
       }
     }
   }
+}
+
+.btns {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
 }
 </style>

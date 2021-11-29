@@ -38,7 +38,7 @@ async function navToItem(path:string) {
     gap: 1rem;
 
     .item {
-
+      cursor: pointer;
     }
   }
 

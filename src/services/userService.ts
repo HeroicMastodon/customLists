@@ -72,7 +72,8 @@ export const userService = {
 
             return response;
         } catch (e) {
-            return handleException(e);
+            const response = handleException(e);
+            return response;
         }
     },
     authenticate: async () => {
@@ -91,7 +92,8 @@ export const userService = {
 
             return isSuccess;
         } catch (error) {
-            handleException(error);
+            const response = handleException(error);
+            return false;
         }
     },
     logout: async () => {
@@ -108,7 +110,8 @@ export const userService = {
 
             return isSuccess;
         } catch (error) {
-            handleException(error);
+            const response = handleException(error);
+            return response;
         }
     },
     hardLogout: async () => {
@@ -125,7 +128,8 @@ export const userService = {
 
             return isSuccess;
         } catch (error) {
-            handleException(error);
+            const response = handleException(error);
+            return response;
         }
     },
     isLoggedIn: computed(() => store.authToken !=
